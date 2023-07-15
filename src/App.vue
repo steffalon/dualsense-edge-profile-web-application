@@ -4,6 +4,7 @@ import Configurator from "./components/Configurator.vue";
 import {Ref, ref} from "vue";
 import {bytesArrayToProfile, profileToBytes} from "./helper/bytesToProfile";
 import Profile from "./model/Profile";
+import {arrayCRC32LeBLE} from "./helper/CRC32";
 
 let edgeHIDController: Ref<HIDDevice | undefined> = ref();
 
@@ -28,6 +29,7 @@ const getProfiles = async () => {
       cIndex++;
     }
     let foundProfiles: Array<Profile> = [];
+    console.log(profileCollector[2][2].slice(60), arrayCRC32LeBLE(new Uint8Array([0xA3, ...profileCollector[2][2].slice(0, 60)])));
     profileCollector.forEach((profile: number[][]) => {
       foundProfiles.push(bytesArrayToProfile(profile));
     });
@@ -81,14 +83,17 @@ const setSelectedProfile = (setSelectedProfile: Profile) => {
 }
 
 const saveProfile = (newProfile: Profile) => {
+  console.log(edgeHIDController.value);
   if (edgeHIDController.value) {
-    const bytesArray = profileToBytes(newProfile);
+    let bytesArray = profileToBytes(newProfile);
 
     //TODO make it possible to function using bluetooth instead of relying on USB protocol
     bytesArray.map(async bytes => {
       let ident = bytes[0];
-      bytes = bytes.slice(1, bytes.length);
-      await edgeHIDController.value?.sendFeatureReport(ident, bytes);
+
+      bytes.set(arrayCRC32LeBLE(new Uint8Array([0xA3, ...bytes])), bytes.length - 4);
+
+      await edgeHIDController.value?.sendFeatureReport(ident, bytes.slice(1, bytes.length));
     })
   }
 }

@@ -17,3 +17,10 @@ export const arrayCRC32Le = (byteArray: Array<Uint8Array>) => {
     // @ts-ignore
     return (CRC32.buf(bufferArray) >>> 0).toString(16).match(/.{1,2}/g).reverse().map(hex => parseInt(hex, 16));
 }
+
+export const arrayCRC32LeBLE = (uint8Array: Uint8Array) => {
+    let copy = uint8Array.slice(0);
+
+    // @ts-ignore
+    return (CRC32.buf(copy) >>> 0).toString(16).match(/.{1,2}/g).reverse().map(hex => parseInt(hex, 16));
+}
