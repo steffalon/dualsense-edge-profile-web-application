@@ -4,8 +4,14 @@ import Joystick from "../../model/Joystick";
 import {PS5_JOYSTICK_CURVE} from "../../helper/bytesToProfile";
 
 defineProps({
-  leftJoystick: Joystick,
-  rightJoystick: Joystick,
+  leftJoystick: {
+    type: Joystick,
+    required: true,
+  },
+  rightJoystick: {
+    type: Joystick,
+    required: true,
+  },
 });
 
 const getCurrentCurve = (joystick: Joystick): number => {
@@ -22,16 +28,16 @@ const getCurrentCurve = (joystick: Joystick): number => {
   return indexCurve;
 }
 
-const changeJoyStickIndex = (joystick: Joystick, input: Event) => {
+const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
   //@ts-ignore
-  joystick.setCurveValues(PS5_JOYSTICK_CURVE[joystick.getProfileId()].getAdjustments().map(curve => curve.getByIndex(input.target.value)));
+  joystick.setCurveValues(PS5_JOYSTICK_CURVE[joystick.getProfileId()].getAdjustments().map(curve => curve.getByIndex(event.target.value)));
 }
 
 </script>
 <template>
   <section>
     <h3>Left stick</h3>
-    <select v-if="leftJoystick" @change="e => leftJoystick.setProfileId(e.target.value)">
+    <select @change="e => leftJoystick.setProfileId(e.target.value)">
       <option :selected="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
         Default
       </option>
@@ -56,11 +62,12 @@ const changeJoyStickIndex = (joystick: Joystick, input: Event) => {
            :value="getCurrentCurve(leftJoystick)"
            min="0"
            max="10"
+           :disabled="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT"
     >
   </section>
   <section>
     <h3>Right stick</h3>
-    <select v-if="rightJoystick" @change="e => rightJoystick.setProfileId(e.target.value)">
+    <select @change="e => rightJoystick.setProfileId(e.target.value)">
       <option :selected="rightJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
         Default
       </option>
@@ -85,6 +92,7 @@ const changeJoyStickIndex = (joystick: Joystick, input: Event) => {
            :value="getCurrentCurve(rightJoystick)"
            min="0"
            max="10"
+           :disabled="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT"
     >
   </section>
 </template>
