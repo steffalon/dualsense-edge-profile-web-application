@@ -2,6 +2,7 @@
 import {JoystickProfileId} from "../../enum/JoystickProfileId";
 import Joystick from "../../model/Joystick";
 import {PS5_JOYSTICK_CURVE} from "../../helper/bytesToProfile";
+import {ref} from "vue";
 
 defineProps({
   leftJoystick: {
@@ -14,6 +15,9 @@ defineProps({
   },
 });
 
+const leftJoystickRange = ref();
+const rightJoystickRange = ref();
+
 const getCurrentCurve = (joystick: Joystick): number => {
 
   console.log(joystick.getCurveValues(), joystick.getProfileId());
@@ -22,7 +26,7 @@ const getCurrentCurve = (joystick: Joystick): number => {
 
   for (indexCurve = 0; indexCurve < 10; indexCurve++) {
     let arrAdjustments = PS5_JOYSTICK_CURVE[joystick.getProfileId()].getAdjustments().map(curve => curve.getByIndex(indexCurve));
-    if (arrAdjustments.toString() ===  joystick.getCurveValues().toString()) break;
+    if (arrAdjustments.toString() === joystick.getCurveValues().toString()) break;
   }
 
   return indexCurve;
@@ -37,7 +41,10 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
 <template>
   <section>
     <h3>Left stick</h3>
-    <select @change="e => leftJoystick.setProfileId(e.target.value)">
+    <select @change="e => {
+      leftJoystick.setProfileId(e.target.value);
+      leftJoystickRange.disabled = Number(leftJoystick.getProfileId()) === JoystickProfileId.DEFAULT
+    }">
       <option :selected="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
         Default
       </option>
@@ -63,11 +70,15 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
            min="0"
            max="10"
            :disabled="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT"
+           ref="leftJoystickRange"
     >
   </section>
   <section>
     <h3>Right stick</h3>
-    <select @change="e => rightJoystick.setProfileId(e.target.value)">
+    <select @change="e => {
+      rightJoystick.setProfileId(e.target.value);
+      rightJoystickRange.disabled = Number(rightJoystick.getProfileId()) === JoystickProfileId.DEFAULT
+    }">
       <option :selected="rightJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
         Default
       </option>
@@ -93,6 +104,7 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
            min="0"
            max="10"
            :disabled="rightJoystick.getProfileId() === JoystickProfileId.DEFAULT"
+           ref="rightJoystickRange"
     >
   </section>
 </template>
