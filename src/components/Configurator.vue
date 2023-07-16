@@ -3,6 +3,7 @@ import Profile from "../model/Profile";
 import {ref, watch} from "vue";
 import Assignment from "./Configuration/Assignment.vue";
 import StickSensitivity from "./Configuration/StickSensitivity.vue";
+import TriggerDeadzone from "./Configuration/TriggerDeadzone.vue";
 
 const props = defineProps({
   selectedProfile: Profile
@@ -62,6 +63,11 @@ watch(props, data => {
           v-if="isActive(1).active"
           :left-joystick="copyProfile.getLeftJoyStick()"
           :right-joystick="copyProfile.getRightJoyStick()"
+      />
+      <TriggerDeadzone
+          v-if="isActive(2).active"
+          :right-trigger="copyProfile.getRightTrigger()"
+          :left-trigger="copyProfile.getLeftTrigger()"
       />
     </section>
   </section>
