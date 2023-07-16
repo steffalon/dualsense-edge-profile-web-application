@@ -92,7 +92,7 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
            :value="getCurrentCurve(rightJoystick)"
            min="0"
            max="10"
-           :disabled="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT"
+           :disabled="rightJoystick.getProfileId() === JoystickProfileId.DEFAULT"
     >
   </section>
 </template>
