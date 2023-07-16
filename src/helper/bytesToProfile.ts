@@ -59,6 +59,11 @@ export const PS5_JOYSTICK_CURVE = [
 
 export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
 
+    const unassignedProfile: boolean = bytesArray[0][1] === 16;
+
+    let leftJoystickCurrentCurveValues = [];
+    let rightJoystickCurrentCurveValues = [];
+
     const assignmentDictionary = {
         0: ProfileButtonSelector.UNASSIGNED,
         112: ProfileButtonSelector.FN_TRIANGLE,
@@ -69,22 +74,34 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
 
     let label: string = "";
 
-    for (let i = 6; i < bytesArray[0].length - 4; i++) {
-        if (bytesArray[0][i] !== 0) {
-            label += String.fromCharCode(bytesArray[0][i]);
+    if (!unassignedProfile) {
+        for (let i = 6; i < bytesArray[0].length - 4; i++) {
+            if (bytesArray[0][i] !== 0) {
+                label += String.fromCharCode(bytesArray[0][i]);
+            }
         }
-    }
 
-    for (let i = 2; i < 27; i++) {
-        if (bytesArray[1][i] !== 0) {
-            label += String.fromCharCode(bytesArray[1][i]);
+        for (let i = 2; i < 27; i++) {
+            if (bytesArray[1][i] !== 0) {
+                label += String.fromCharCode(bytesArray[1][i]);
+            }
         }
+
+        leftJoystickCurrentCurveValues = bytesArray[1].slice(47, 53);
+
+        rightJoystickCurrentCurveValues = bytesArray[1].slice(56, 60);
+        rightJoystickCurrentCurveValues.push(...bytesArray[2].slice(2, 4));
+
+    } else {
+        label = "Unassigned";
+        leftJoystickCurrentCurveValues = [128, 128, 196, 196, 225, 225];
+        rightJoystickCurrentCurveValues = [128, 128, 196, 196, 225, 225];
+        for (let i = 1; i < 16; i++) {
+            bytesArray[2][10 + i] = i;
+        }
+        bytesArray[2][5] = 0xFF;
+        bytesArray[2][7] = 0xFF;
     }
-
-    let leftJoystickCurrentCurveValues = bytesArray[1].slice(47, 53);
-
-    let rightJoystickCurrentCurveValues = bytesArray[1].slice(56, 60);
-    rightJoystickCurrentCurveValues.push(...bytesArray[2].slice(2, 4));
 
     const profile = new Profile(
         label,
