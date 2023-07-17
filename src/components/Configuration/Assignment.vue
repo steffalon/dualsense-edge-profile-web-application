@@ -1,7 +1,28 @@
 <script setup lang="ts">
+
+import {ref} from "vue";
+
+const select_popup = ref();
+
+const scanSelected = (e: Event) => {
+  //@ts-ignore
+  const element: Element = e.target;
+
+  if (element.id === "controller" || element.id === "select-popup") {
+    select_popup.style = null;
+    return;
+  }
+
+  select_popup.value.style.display = "block";
+
+  //@ts-ignore
+  select_popup.value.style.left = (e.pageX - e.currentTarget.offsetLeft) + 'px';
+  //@ts-ignore
+  select_popup.value.style.top = (e.pageY - e.currentTarget.offsetTop) + 'px';
+}
 </script>
 <template>
-  <section class="controller-front">
+  <section class="controller-front" id="controller" @click="e => scanSelected(e)">
     <span style="left: 386px; top: 180px" class="interactable circle-button" id="circle"></span>
     <span style="left: 332px; top: 180px" class="interactable circle-button" id="square"></span>
     <span style="left: 359px; top: 207px" class="interactable circle-button" id="cross"></span>
@@ -14,7 +35,6 @@
 
     <span style="left: 173px; top: 218px" class="interactable circle-joystick" id="left_joystick"></span>
     <span style="left: 292px; top: 218px" class="interactable circle-joystick" id="right_joystick"></span>
-
 
     <span style="left: 112px; top: 115px" class="interactable left_1" id="left_1"></span>
     <span style="left: 348px; top: 115px" class="interactable right_1" id="right_1"></span>
@@ -32,7 +52,7 @@
     <span style="left: 198px; top: 310px" class="interactable paddle_left" id="paddle_left"></span>
     <span style="left: 301px; top: 310px" class="interactable paddle_right" id="paddle_right"></span>
 
-    <section class="select-popup">
+    <section id="select-popup" ref="select_popup" class="select-popup">
       <p>Button: []</p>
       <select>
         <option>X</option>
@@ -76,7 +96,8 @@
   padding: 10px 20px;
   border-radius: 5px;
   box-shadow: 3px 5px 12px 2px rgba(0, 0, 0, 0.15);
-  left: 426px; top: 180px
+  background-color: #FFFFFF;
+  display: none;
 }
 
 .dpad-button {
@@ -150,7 +171,7 @@
 }
 
 .trackpad {
-  background-color: rgba(0,0,0,.7);
+  background-color: rgba(0, 0, 0, .7);
   width: 150px;
   height: 72px;
   position: absolute;
