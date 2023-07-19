@@ -58,7 +58,10 @@ watch(props, data => {
       <span @click="changeTabIndex(3)" :class="isActive(3)" class="tab">Other</span>
     </section>
     <section class="configuration-setting-container">
-      <Assignment v-if="isActive(0).active"/>
+      <Assignment
+          v-if="isActive(0).active"
+          :buttons="copyProfile.getButtonMapping()"
+      />
       <StickSensitivity
           v-if="isActive(1).active"
           :left-joystick="copyProfile.getLeftJoyStick()"

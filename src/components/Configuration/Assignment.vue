@@ -1,6 +1,14 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
+import {Button} from "../../enum/Button.ts";
+
+const props = defineProps({
+  buttons: {
+    type: Array<Button>,
+    required: true,
+  },
+});
 
 const select_popup = ref();
 
@@ -8,8 +16,13 @@ const scanSelected = (e: Event) => {
   //@ts-ignore
   const element: Element = e.target;
 
-  if (element.id === "controller" || element.id === "select-popup") {
-    select_popup.style = null;
+  if (element.id === "select-popup-close" || element.id === "controller") {
+    select_popup.value.style.display = "none";
+    return;
+  }
+
+  //@ts-ignore
+  if (element.id === "select-popup" || element.parentElement.id === "select-popup") {
     return;
   }
 
@@ -53,9 +66,10 @@ const scanSelected = (e: Event) => {
     <span style="left: 301px; top: 310px" class="interactable paddle_right" id="paddle_right"></span>
 
     <section id="select-popup" ref="select_popup" class="select-popup">
+      <button class="select-popup-close" id="select-popup-close">x</button>
       <p>Button: []</p>
       <select>
-        <option>X</option>
+        <option v-for="button in Object.keys(Button)">{{button}}</option>
       </select>
     </section>
   </section>
@@ -98,6 +112,13 @@ const scanSelected = (e: Event) => {
   box-shadow: 3px 5px 12px 2px rgba(0, 0, 0, 0.15);
   background-color: #FFFFFF;
   display: none;
+}
+
+.select-popup-close {
+  text-align: right;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .dpad-button {

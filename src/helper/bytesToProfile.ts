@@ -67,9 +67,9 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
     const assignmentDictionary = {
         0: ProfileButtonSelector.UNASSIGNED,
         112: ProfileButtonSelector.FN_TRIANGLE,
-        115: ProfileButtonSelector.FN_CIRCLE,
+        115: ProfileButtonSelector.FN_SQUARE,
         118: ProfileButtonSelector.FN_CROSS,
-        121: ProfileButtonSelector.FN_SQUARE,
+        121: ProfileButtonSelector.FN_CIRCLE,
     }
 
     let label: string = "";
