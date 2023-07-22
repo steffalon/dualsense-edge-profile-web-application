@@ -1,16 +1,36 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
-import {Button} from "../../enum/Button.ts";
+import {Button, ButtonIndex} from "../../enum/Button";
+import ButtonMapping from "../../model/ButtonMapping";
 
 const props = defineProps({
-  buttons: {
-    type: Array<Button>,
+  buttonMappping: {
+    type: ButtonMapping,
     required: true,
   },
 });
 
+const buttonLabels = Object.keys(Button).filter(key => isNaN(Number(key)));
+
 const select_popup = ref();
+
+const selectedButtonOriginalValue = ref();
+const selectedButtonAssignedValue = ref();
+
+const updateButton = (e: Event) => {
+  //@ts-ignore
+  const element: Element = e.target;
+
+  const buttons = props.buttonMappping?.getButtons();
+
+  const value = Number(element.value);
+
+  selectedButtonAssignedValue.value = value;
+  buttons[selectedButtonOriginalValue.value] = value;
+
+  props.buttons?.setButtons(buttons);
+}
 
 const scanSelected = (e: Event) => {
   //@ts-ignore
@@ -26,6 +46,13 @@ const scanSelected = (e: Event) => {
     return;
   }
 
+  const original: number = Number(element.dataset.original);
+
+  //@ts-ignore
+  selectedButtonOriginalValue.value = original;
+
+  selectedButtonAssignedValue.value = Number(Object.values(props.buttonMappping?.getButtons())[original]);
+
   select_popup.value.style.display = "block";
 
   //@ts-ignore
@@ -36,40 +63,69 @@ const scanSelected = (e: Event) => {
 </script>
 <template>
   <section class="controller-front" id="controller" @click="e => scanSelected(e)">
-    <span style="left: 386px; top: 180px" class="interactable circle-button" id="circle"></span>
-    <span style="left: 332px; top: 180px" class="interactable circle-button" id="square"></span>
-    <span style="left: 359px; top: 207px" class="interactable circle-button" id="cross"></span>
-    <span style="left: 359px; top: 155px" class="interactable circle-button" id="triangle"></span>
+    <span style="left: 386px; top: 180px" :data-original="Button.CIRCLE" class="interactable circle-button"
+          id="circle"></span>
+    <span style="left: 332px; top: 180px" :data-original="Button.SQUARE" class="interactable circle-button"
+          id="square"></span>
+    <span style="left: 359px; top: 207px" :data-original="Button.CROSS" class="interactable circle-button"
+          id="cross"></span>
+    <span style="left: 359px; top: 155px" :data-original="Button.TRIANGLE" class="interactable circle-button"
+          id="triangle"></span>
 
-    <span style="left: 109px; top: 182px;" class="interactable dpad-button" id="dpad_left"></span>
-    <span style="left: 126.5px; top: 199px; rotate: 270deg" class="interactable dpad-button" id="dpad_bottom"></span>
-    <span style="left: 144px; top: 182px; rotate: 180deg" class="interactable dpad-button" id="dpad_right"></span>
-    <span style="left: 126.5px; top: 166px; rotate: 90deg" class="interactable dpad-button" id="dpad_top"></span>
+    <span style="left: 109px; top: 182px;" :data-original="Button.LEFT" class="interactable dpad-button"
+          id="dpad_left"></span>
+    <span style="left: 126.5px; top: 199px; rotate: 270deg" :data-original="Button.DOWN"
+          class="interactable dpad-button" id="dpad_bottom"></span>
+    <span style="left: 144px; top: 182px; rotate: 180deg" :data-original="Button.RIGHT"
+          class="interactable dpad-button" id="dpad_right"></span>
+    <span style="left: 126.5px; top: 166px; rotate: 90deg" :data-original="Button.UP"
+          class="interactable dpad-button" id="dpad_top"></span>
 
-    <span style="left: 173px; top: 218px" class="interactable circle-joystick" id="left_joystick"></span>
-    <span style="left: 292px; top: 218px" class="interactable circle-joystick" id="right_joystick"></span>
+    <span style="left: 173px; top: 218px" :data-original="Button.L3" class="interactable circle-joystick"
+          id="left_joystick"></span>
+    <span style="left: 292px; top: 218px" :data-original="Button.R3" class="interactable circle-joystick"
+          id="right_joystick"></span>
 
-    <span style="left: 112px; top: 115px" class="interactable left_1" id="left_1"></span>
-    <span style="left: 348px; top: 115px" class="interactable right_1" id="right_1"></span>
+    <span style="left: 112px; top: 115px" :data-original="Button.L1" class="interactable left_1"
+          id="left_1"></span>
+    <span style="left: 348px; top: 115px" :data-original="Button.R1" class="interactable right_1"
+          id="right_1"></span>
 
-    <span style="left: 104px; top: 64px" class="interactable left_2" id="left_2"></span>
-    <span style="left: 356px; top: 64px" class="interactable right_2" id="right_2"></span>
+    <span style="left: 104px; top: 64px" :data-original="Button.L2" class="interactable left_2"
+          id="left_2"></span>
+    <span style="left: 356px; top: 64px" :data-original="Button.R2" class="interactable right_2"
+          id="right_2"></span>
 
-    <span style="left: 164px; top: 146px" class="interactable create_button" id="create_button"></span>
-    <span style="left: 336px; top: 146px" class="interactable options_button" id="options_button"></span>
+    <!--    <span style="left: 164px; top: 146px" class="interactable create_button" id="create_button"></span>-->
 
-    <span style="left: 181px; top: 135px" class="interactable trackpad" id="trackpad"></span>
+    <!--    <span style="left: 336px; top: 146px" :data-original="BUTTON_INDEX_MAP.OPTIONS" class="interactable options_button"-->
+    <!--          id="options_button"></span>-->
 
-    <span style="left: 244px; top: 229px" class="interactable circle-button" id="ps_button"></span>
+    <!--    <span style="left: 181px; top: 135px" :data-original="BUTTON_INDEX_MAP.TOUCHPAD" class="interactable trackpad"-->
+    <!--          id="trackpad"></span>-->
 
-    <span style="left: 198px; top: 310px" class="interactable paddle_left" id="paddle_left"></span>
-    <span style="left: 301px; top: 310px" class="interactable paddle_right" id="paddle_right"></span>
+    <!--    <span style="left: 244px; top: 229px" class="interactable circle-button" id="ps_button"></span>-->
+
+    <span style="left: 198px; top: 310px" :data-original="ButtonIndex.PADDLE_LEFT" class="interactable paddle_left"
+          id="paddle_left"></span>
+    <span style="left: 301px; top: 310px" :data-original="ButtonIndex.PADDLE_RIGHT"
+          class="interactable paddle_right" id="paddle_right"></span>
 
     <section id="select-popup" ref="select_popup" class="select-popup">
       <button class="select-popup-close" id="select-popup-close">x</button>
-      <p>Button: []</p>
-      <select>
-        <option v-for="button in Object.keys(Button)">{{button}}</option>
+      <p>Button: <span class="button-identifier-original">{{ ButtonIndex[selectedButtonOriginalValue] }}</span></p>
+      <label for="assignment">Assigned:</label>
+      <select id="assignment" @change="e => updateButton(e)">
+        <option v-for="button in buttonLabels"
+                :value="Button[button]"
+                :selected="selectedButtonAssignedValue === Button[button]">
+          {{ button }}
+        </option>
+        <option v-if="Number(selectedButtonOriginalValue) === 14 || Number(selectedButtonOriginalValue) === 15"
+                :value="Number(selectedButtonOriginalValue)"
+                :selected="selectedButtonAssignedValue === selectedButtonOriginalValue">
+          {{ ButtonIndex[selectedButtonOriginalValue] }}
+        </option>
       </select>
     </section>
   </section>
@@ -106,7 +162,7 @@ const scanSelected = (e: Event) => {
 
 .select-popup {
   position: absolute;
-  width: 75px;
+  width: 115px;
   padding: 10px 20px;
   border-radius: 5px;
   box-shadow: 3px 5px 12px 2px rgba(0, 0, 0, 0.15);
@@ -222,5 +278,9 @@ const scanSelected = (e: Event) => {
 
 .interactable:hover {
   background-color: yellow;
+}
+
+.button-identifier-original {
+  font-weight: bold;
 }
 </style>

@@ -5,6 +5,7 @@ import JoystickCurve from "../model/JoystickCurve";
 import Trigger from "../model/Trigger";
 import {ProfileButtonSelector} from "../enum/ProfileButtonSelector";
 import {arrayCRC32Le} from "./CRC32";
+import ButtonMapping from "../model/ButtonMapping";
 
 export const PS5_JOYSTICK_CURVE = [
     new Joystick(JoystickProfileId.DEFAULT, [
@@ -109,7 +110,7 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
         new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][32]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][32]].getAdjustments()),
         new Trigger(bytesArray[2][4], bytesArray[2][5]),
         new Trigger(bytesArray[2][6], bytesArray[2][7]),
-        bytesArray[2].slice(11, 28),
+        new ButtonMapping(bytesArray[2].slice(10, 26)),
         // @ts-ignore
         assignmentDictionary[bytesArray[0][0]]
     );
@@ -176,7 +177,7 @@ export function profileToBytes(profile: Profile): Array<Uint8Array> {
     buffers[2][6] = profile.getRightTrigger().getMin();
     buffers[2][7] = profile.getRightTrigger().getMax();
 
-    buffers[2].set(profile.getButtonMapping(), 11);
+    buffers[2].set(profile.getButtonMapping().getButtons(), 10);
 
     buffers[2][28] = 0xC0;
     buffers[2].set([0x1c, 0x55, 0xbb, 0x05, 0x87, 0x01], 34);

@@ -1,7 +1,7 @@
 import Joystick from "./Joystick";
 import Trigger from "./Trigger";
-import {Button} from "../enum/Button";
 import {ProfileButtonSelector} from "../enum/ProfileButtonSelector";
+import ButtonMapping from "./ButtonMapping";
 
 export default class Profile {
 
@@ -13,8 +13,7 @@ export default class Profile {
     private leftTrigger: Trigger;
     private rightTrigger: Trigger;
 
-    private buttonMapping: Array<Button>;
-
+    private buttonMapping: ButtonMapping;
 
     private profileButtonSelector: ProfileButtonSelector;
 
@@ -24,25 +23,7 @@ export default class Profile {
         rightJoystick: Joystick,
         leftTrigger: Trigger,
         rightTrigger: Trigger,
-        buttonMapping: Array<Button> = [
-            Button.SQUARE,
-            Button.CROSS,
-            Button.CIRCLE,
-            Button.TRIANGLE,
-            Button.L1,
-            Button.R1,
-            Button.L2,
-            Button.R2,
-            Button.OPTIONS,
-            Button.CREATE,
-            Button.L3,
-            Button.R3,
-            Button.PS,
-            Button.TOUCHPAD,
-            Button.MUTE,
-            Button.UNASSIGNED, //LEFT_PADDLE
-            Button.UNASSIGNED, //RIGHT_PADDLE
-        ],
+        buttonMapping: ButtonMapping,
         profileButtonSelector: ProfileButtonSelector = ProfileButtonSelector.UNASSIGNED
     ) {
         this.label = label;
@@ -95,11 +76,11 @@ export default class Profile {
         this.rightTrigger = value;
     }
 
-    getButtonMapping(): Array<Button> {
+    getButtonMapping(): ButtonMapping {
         return this.buttonMapping;
     }
 
-    setButtonMapping(value: Array<Button>) {
+    setButtonMapping(value: ButtonMapping) {
         this.buttonMapping = value;
     }
 

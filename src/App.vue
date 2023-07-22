@@ -29,7 +29,7 @@ const getProfiles = async () => {
       cIndex++;
     }
     let foundProfiles: Array<Profile> = [];
-    console.log(profileCollector[2][2].slice(60), arrayCRC32LeBLE(new Uint8Array([0xA3, ...profileCollector[2][2].slice(0, 60)])));
+    // console.log(profileCollector[2][2].slice(60), arrayCRC32LeBLE(new Uint8Array([0xA3, ...profileCollector[2][2].slice(0, 60)])));
     profileCollector.forEach((profile: number[][]) => {
       foundProfiles.push(bytesArrayToProfile(profile));
     });

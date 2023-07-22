@@ -14,7 +14,6 @@ defineEmits([
 ]);
 
 let selectedTabIndex = ref(0);
-let indexLeftValue = ref();
 
 const isActive = (i: number) => {
   return {active: selectedTabIndex.value === i};
@@ -28,7 +27,6 @@ let copyProfile = ref();
 
 const save = () => {
   copyProfile.value.setLabel(model.label);
-  console.log(indexLeftValue);
   console.log('saving!', copyProfile.value);
   return copyProfile.value;
 }
@@ -60,7 +58,7 @@ watch(props, data => {
     <section class="configuration-setting-container">
       <Assignment
           v-if="isActive(0).active"
-          :buttons="copyProfile.getButtonMapping()"
+          :buttonMappping="copyProfile.getButtonMapping()"
       />
       <StickSensitivity
           v-if="isActive(1).active"
