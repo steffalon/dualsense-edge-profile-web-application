@@ -20,7 +20,7 @@ const selectedButtonAssignedValue = ref();
 
 const updateButton = (e: Event) => {
   //@ts-ignore
-  const element: Element = e.target;
+  const element: any = e.target;
 
   const buttons = props.buttonMappping?.getButtons();
 
@@ -29,12 +29,12 @@ const updateButton = (e: Event) => {
   selectedButtonAssignedValue.value = value;
   buttons[selectedButtonOriginalValue.value] = value;
 
-  props.buttons?.setButtons(buttons);
+  props.buttonMappping.setButtons(buttons);
 }
 
 const scanSelected = (e: Event) => {
-  //@ts-ignore
-  const element: Element = e.target;
+
+  const element: any = e.target;
 
   if (element.id === "select-popup-close" || element.id === "controller") {
     select_popup.value.style.display = "none";
@@ -48,7 +48,6 @@ const scanSelected = (e: Event) => {
 
   const original: number = Number(element.dataset.original);
 
-  //@ts-ignore
   selectedButtonOriginalValue.value = original;
 
   selectedButtonAssignedValue.value = Number(Object.values(props.buttonMappping?.getButtons())[original]);
@@ -115,10 +114,10 @@ const scanSelected = (e: Event) => {
       <button class="select-popup-close" id="select-popup-close">x</button>
       <p>Button: <span class="button-identifier-original">{{ ButtonIndex[selectedButtonOriginalValue] }}</span></p>
       <label for="assignment">Assigned:</label>
-      <select id="assignment" @change="e => updateButton(e)">
+      <select id="assignment" @change="(e: any) => updateButton(e)">
         <option v-for="button in buttonLabels"
-                :value="Button[button]"
-                :selected="selectedButtonAssignedValue === Button[button]">
+                :value="Button[button as any]"
+                :selected="selectedButtonAssignedValue === Button[button as any]">
           {{ button }}
         </option>
         <option v-if="Number(selectedButtonOriginalValue) === 14 || Number(selectedButtonOriginalValue) === 15"

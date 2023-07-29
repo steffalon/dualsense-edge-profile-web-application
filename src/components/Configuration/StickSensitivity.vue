@@ -41,7 +41,7 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
 <template>
   <section>
     <h3>Left stick</h3>
-    <select @change="e => {
+    <select @change="(e: any) => {
       leftJoystick.setProfileId(e.target.value);
       leftJoystickRange.disabled = Number(leftJoystick.getProfileId()) === JoystickProfileId.DEFAULT
     }">
@@ -75,8 +75,8 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
   </section>
   <section>
     <h3>Right stick</h3>
-    <select @change="e => {
-      rightJoystick.setProfileId(e.target.value);
+    <select @change="(e: any) => {
+      rightJoystick.setProfileId(e.target?.value);
       rightJoystickRange.disabled = Number(rightJoystick.getProfileId()) === JoystickProfileId.DEFAULT
     }">
       <option :selected="rightJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
@@ -99,7 +99,7 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
       </option>
     </select>
     <input type="range"
-           @change="e => changeJoyStickIndex(rightJoystick, e)"
+           @change="(e: any) => changeJoyStickIndex(rightJoystick, e)"
            :value="getCurrentCurve(rightJoystick)"
            min="0"
            max="10"

@@ -3,7 +3,10 @@ import Profile from "../../model/Profile";
 import {ProfileButtonSelector} from "../../enum/ProfileButtonSelector";
 
 defineProps({
-  profile: Profile
+  profile: {
+    type: Profile,
+    required: true,
+  }
 });
 defineEmits([
   'selected-profile'
