@@ -94,7 +94,7 @@ const saveProfile = (newProfile: Profile) => {
       bytes.set(arrayCRC32LeBLE(new Uint8Array([0xA3, ...bytes])), bytes.length - 4);
 
       await edgeHIDController.value?.sendFeatureReport(ident, bytes.slice(1, bytes.length));
-    })
+    });
   }
 }
 

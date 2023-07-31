@@ -150,7 +150,8 @@ export function profileToBytes(profile: Profile): Array<Uint8Array> {
         }
     }
 
-    buffers[1].set([0x7e, 0x05, 0x28, 0x42, 0x8a, 0x5d, 0x42, 0x4e, 0xa6, 0xa8, 0xcd, 0xce, 0x85, 0x54, 0x22, 0x43], 28)
+    // Generated ID?
+    buffers[1].set(new Array(16).fill(0,0).map(() => Math.floor(Math.random() * 255)), 28)
 
     buffers[2][30] = profile.getLeftJoyStick().getProfileId();
     buffers[2][32] = profile.getRightJoyStick().getProfileId();
@@ -179,7 +180,10 @@ export function profileToBytes(profile: Profile): Array<Uint8Array> {
 
     buffers[2].set(profile.getButtonMapping().getButtons(), 10);
 
-    buffers[2][28] = 0xC0;
+    // Ignore paddle input?
+    // buffers[2][28] = 0xC0;
+
+    // DateTime area?
     buffers[2].set([0x1c, 0x55, 0xbb, 0x05, 0x87, 0x01], 34);
 
     buffers[2].set(arrayCRC32Le(buffers), 56);
