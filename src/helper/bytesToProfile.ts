@@ -74,6 +74,7 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
     }
 
     let label: string = "";
+    let id: string = "";
 
     if (!unassignedProfile) {
         for (let i = 6; i < bytesArray[0].length - 4; i++) {
@@ -93,6 +94,7 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
         rightJoystickCurrentCurveValues = bytesArray[1].slice(56, 60);
         rightJoystickCurrentCurveValues.push(...bytesArray[2].slice(2, 4));
 
+        id = new Array(16).fill(0, 0).map(() => Math.floor(Math.random() * 255), 28).join();
     } else {
         label = "Unassigned";
         leftJoystickCurrentCurveValues = [128, 128, 196, 196, 225, 225];
@@ -102,9 +104,12 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
         }
         bytesArray[2][5] = 0xFF;
         bytesArray[2][7] = 0xFF;
+
+        id = bytesArray.splice(28, 44).join();
     }
 
     const profile = new Profile(
+        id,
         label,
         new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][30]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][30]].getAdjustments()),
         new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][32]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][32]].getAdjustments()),
@@ -151,7 +156,7 @@ export function profileToBytes(profile: Profile): Array<Uint8Array> {
     }
 
     // Generated ID?
-    buffers[1].set(new Array(16).fill(0,0).map(() => Math.floor(Math.random() * 255)), 28)
+    buffers[1].set(profile.getId().split(',').map(elem => Number(elem)), 28);
 
     buffers[2][30] = profile.getLeftJoyStick().getProfileId();
     buffers[2][32] = profile.getRightJoyStick().getProfileId();
@@ -159,8 +164,6 @@ export function profileToBytes(profile: Profile): Array<Uint8Array> {
     // Deep copy using JSON
     let joyConL = JSON.parse(JSON.stringify(profile.getLeftJoyStick().getCurveValues()));
     let joyConR = JSON.parse(JSON.stringify(profile.getRightJoyStick().getCurveValues()));
-
-    console.log(joyConL, joyConR);
 
     for (let i = 47; i < 53; i++) {
         buffers[1][i] = joyConL.shift();

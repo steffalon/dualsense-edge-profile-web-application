@@ -5,6 +5,7 @@ import ButtonMapping from "./ButtonMapping";
 
 export default class Profile {
 
+    private id: string;
     private label: string;
 
     private leftJoystick: Joystick;
@@ -18,6 +19,7 @@ export default class Profile {
     private profileButtonSelector: ProfileButtonSelector;
 
     constructor(
+        id: string = "",
         label: string = "Label",
         leftJoystick: Joystick,
         rightJoystick: Joystick,
@@ -26,6 +28,7 @@ export default class Profile {
         buttonMapping: ButtonMapping,
         profileButtonSelector: ProfileButtonSelector = ProfileButtonSelector.UNASSIGNED
     ) {
+        this.id = id;
         this.label = label;
         this.leftJoystick = leftJoystick;
         this.rightJoystick = rightJoystick;
@@ -35,6 +38,13 @@ export default class Profile {
         this.profileButtonSelector = profileButtonSelector;
     }
 
+    getId(): string {
+        return this.id;
+    }
+
+    setId(value: string) {
+        this.id = value;
+    }
 
     getLabel(): string {
         return this.label;

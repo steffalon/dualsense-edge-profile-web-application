@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import ProfileOverview from "./components/profile/ProfileOverview.vue";
 import Configurator from "./components/Configurator.vue";
-import {Ref, ref} from "vue";
+import {provide, Ref, ref} from "vue";
 import {bytesArrayToProfile, profileToBytes} from "./helper/bytesToProfile";
 import Profile from "./model/Profile";
 import {arrayCRC32LeBLE} from "./helper/CRC32";
+import LocalIndexDB from "./model/LocalIndexDB";
+
+const db = new LocalIndexDB('ds-edge-profiles');
+provide('db', db);
 
 let edgeHIDController: Ref<HIDDevice | undefined> = ref();
 
 let profiles = ref();
 let selectedProfile = ref();
+let hasSelectedSavedProfile = ref(false);
 
 const FILTERS = {
   vendorId: 0x054C, // Sony Interactive Entertainment
@@ -78,7 +83,8 @@ navigator.hid.getDevices().then(devices => {
   }
 });
 
-const setSelectedProfile = (setSelectedProfile: Profile) => {
+const setSelectedProfile = (setSelectedProfile: Profile, isSavedProfile: boolean = false) => {
+  hasSelectedSavedProfile.value = isSavedProfile;
   selectedProfile.value = setSelectedProfile;
 }
 
@@ -107,8 +113,13 @@ const saveProfile = (newProfile: Profile) => {
     <button @click="getDevice">Connect controller</button>
   </section>
   <section v-else class="container">
-    <ProfileOverview @selected-profile="setSelectedProfile" :profiles="profiles" class="profile-overview"/>
-    <Configurator @save="saveProfile" :selected-profile="selectedProfile" class="configurator"/>
+    <ProfileOverview @selected-profile="setSelectedProfile"
+                     :profiles="profiles"
+                     class="profile-overview"/>
+    <Configurator @save="saveProfile"
+                  :is-saved-profile="hasSelectedSavedProfile"
+                  :selected-profile="selectedProfile"
+                  class="configurator"/>
   </section>
 </template>
 
