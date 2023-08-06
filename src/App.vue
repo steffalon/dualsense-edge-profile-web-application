@@ -101,16 +101,19 @@ const saveProfile = (newProfile: Profile) => {
 
       await edgeHIDController.value?.sendFeatureReport(ident, bytes.slice(1, bytes.length));
     });
+    alert(`Profile "${newProfile.getLabel()}" is set to controller`);
   }
 }
 
 </script>
 
 <template>
-  <section v-if="!edgeHIDController">
-    <h3>DualSense Edge controller not found!</h3>
-    <p>Please (re)connect your controller.</p>
-    <button @click="getDevice">Connect controller</button>
+  <section v-if="!edgeHIDController" class="connect-controller-container">
+    <section class="connect-controller-content">
+      <h3 class="connect-controller-header">DualSense Edge controller not found!</h3>
+      <p class="connect-controller-text">Please (re)connect your controller.</p>
+      <button class="connect-controller-button" @click="getDevice">Connect controller</button>
+    </section>
   </section>
   <section v-else class="container">
     <ProfileOverview @selected-profile="setSelectedProfile"
@@ -135,5 +138,53 @@ const saveProfile = (newProfile: Profile) => {
 
 .configurator {
   flex: 1;
+}
+
+.connect-controller-container {
+  height: 100vh;
+  display: flex;
+  margin: auto;
+  width: 520px;
+}
+
+.connect-controller-header {
+  color: #00473e;
+}
+
+.connect-controller-content {
+  margin: auto;
+  color: #475d5b;
+  border-bottom: 2px solid #00332c;
+  border-top: 2px solid #00332c;
+  padding: 10px 20px;
+}
+
+.connect-controller-button {
+  background-color: #faae2b;
+  border: 0;
+  color: #00473e;
+  padding: 12px 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .connect-controller-header {
+    color: #fffffe;
+  }
+
+  .connect-controller-content {
+    color: #a7a9be;
+    border-bottom: 2px solid #ffffff;
+    border-top: 2px solid #ffffff;
+    background-color: #1F1B24;
+  }
+
+  .connect-controller-button {
+    color: #fffffe;
+    background-color: #ff8906;
+  }
 }
 </style>

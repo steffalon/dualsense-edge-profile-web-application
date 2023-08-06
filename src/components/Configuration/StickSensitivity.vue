@@ -109,5 +109,15 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
   </section>
 </template>
 <style scoped>
-
+input[type="range"] {
+  width: 300px;
+}
+h3 {
+  color: #00473e;
+}
+@media (prefers-color-scheme: dark) {
+  h3 {
+    color: #fffffe;
+  }
+}
 </style>

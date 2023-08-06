@@ -9,10 +9,80 @@
         body {
             margin: 0;
             font-family: sans-serif;
+            background-color: #f2f7f5;
+        }
+
+        noscript {
+            margin: auto;
+            display: flex;
+            height: 100vh;
+            padding: 0 25px;
+            max-width: 520px;
+        }
+
+        .noscript-content {
+            margin: auto;
+            color: #475d5b;
+            border-bottom: 2px solid #00332c;
+            border-top: 2px solid #00332c;
+            padding: 10px 20px;
+        }
+
+        .noscript-content a {
+            color: #faae2b;
+            font-weight: bold;
+        }
+
+        .noscript-header {
+            color: #00473e;
+            letter-spacing: 0.42pt;
+        }
+
+        .noscript-paragraph {
+            letter-spacing: 0.16pt;
+            line-height: 1.3rem;
+        }
+
+        input {
+            accent-color: #408EC6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #0f0e17;
+            }
+
+            input {
+                accent-color: #f25f4c;
+            }
+
+            .noscript-header {
+                color: #fffffe;
+            }
+
+            .noscript-content {
+                color: #a7a9be;
+                border-bottom: 2px solid #ffffff;
+                border-top: 2px solid #ffffff;
+                background-color: #1F1B24;
+            }
+
+            .noscript-content a {
+                color: #ff8906;
+                font-weight: bold;
+            }
         }
     </style>
 </head>
 <body>
+<noscript>
+    <div class="noscript-content">
+        <h2 class="noscript-header">Greetings gamer!</h2>
+        <p class="noscript-paragraph">To configure a DualSense Edge controller and store your own local save data,
+            JavaScript must be enabled to communicate with your DualSense Edge device.</p>
+        <p class="noscript-paragraph">If you've just enabled JavaScript, please <a href="/">refresh</a> this page</p>
+    </div>
+</noscript>
 <div id="app"></div>
 <script type="module" src="/src/main.ts"></script>
 </body>

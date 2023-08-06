@@ -24,3 +24,16 @@ defineProps({
     <p>Max:</p><input type="range" :value="rightTrigger.getMax()" @change="(e: any) => rightTrigger.setMax(e.target.value)" min="0" max="255">
   </section>
 </template>
+<style scoped>
+input[type="range"] {
+  width: 300px;
+}
+h3, p {
+  color: #00473e;
+}
+@media (prefers-color-scheme: dark) {
+  h3, p {
+    color: #fffffe;
+  }
+}
+</style>

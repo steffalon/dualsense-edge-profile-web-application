@@ -34,4 +34,13 @@ defineEmits([
 p {
   padding: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  .item {
+    color: #fffffe;
+  }
+  .item:hover {
+    background-color: rgba(147, 97, 97, 0.34);
+  }
+}
 </style>

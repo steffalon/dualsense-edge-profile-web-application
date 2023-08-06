@@ -51,7 +51,6 @@ const createNewProfile = () => {
   let name = prompt("New profile name");
   if (name) {
     const profile = assembleBlankProfile(name);
-    console.log(profile);
     db.store(profile);
     savedProfiles.value.push(profile);
     emit('selected-profile', profile);
@@ -74,7 +73,7 @@ const createNewProfile = () => {
         <Profile @selected-profile="(selectedProfile) => $emit('selected-profile', selectedProfile, true)"
                  v-for="profile in savedProfiles"
                  :profile="profile">
-          <button @click="deleteProfileConfirm(profile)">Delete</button>
+          <button class="profile-delete-button" @click="deleteProfileConfirm(profile)">Delete</button>
         </Profile>
       </section>
     </section>
@@ -100,14 +99,32 @@ const createNewProfile = () => {
   width: 100%;
   height: 50px;
   border: 0;
-  background-color: #c0c0c0;
-}
-
-.create-new-profile button:hover {
-
+  background-color: #faae2b;
+  color: #00473e;
 }
 
 .saved {
   border-top: 1px solid black;
+}
+
+.profile-delete-button {
+  all: unset;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+@media (prefers-color-scheme: dark) {
+  .overview {
+    background-color: #f25f4c;
+  }
+  .create-new-profile button {
+    background-color: #ff8906;
+    font-weight: bold;
+    color: #fffffe;
+  }
+
+  .saved {
+    border-top: 1px solid #fffffe;
+  }
 }
 </style>

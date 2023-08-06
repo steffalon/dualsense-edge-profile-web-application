@@ -51,7 +51,9 @@ const applyExistingProfile = (e: any) => {
 const save = () => {
   console.log(copyProfile.value);
   if (props.isSavedProfile) {
-    return db.update(copyProfile.value);
+    db.update(copyProfile.value);
+    alert(`Profile "${copyProfile.value.getLabel()}" saved`);
+    return;
   }
   return emits('save', copyProfile.value);
 }
@@ -70,10 +72,11 @@ watch(props, data => {
   <section v-if="copyProfile" class="configurator">
     <section class="configurator-top-header">
       <section>
-        <h1>Profile: <input :value="copyProfile.getLabel()" @change="(e: any) => copyProfile.setLabel(e.target.value)"
-                            type="text"></h1>
+        <h1 class="profile-name">Profile: <input :value="copyProfile.getLabel()"
+                                                 @change="(e: any) => copyProfile.setLabel(e.target.value)"
+                                                 type="text"></h1>
       </section>
-      <section v-if="!props.isSavedProfile && foundSavedProfiles.length">
+      <section v-if="!props.isSavedProfile && foundSavedProfiles.length" class="apply-existing-profile">
         <label for="select-saved-profile">Apply existing profile</label>
         <select id="select-saved-profile" @change="applyExistingProfile">
           <option>Unselected</option>
@@ -83,7 +86,7 @@ watch(props, data => {
         </select>
       </section>
       <section>
-        <button @click="save()">Save</button>
+        <button class="save-btn" @click="save()">Save</button>
       </section>
     </section>
     <section class="tabs">
@@ -126,17 +129,85 @@ watch(props, data => {
   padding: 10px 14px;
   width: 100%;
   cursor: pointer;
-  border: 1px solid black;
+  color: #00473e;
+  border: 1px solid #00332c;
   text-align: center;
 }
 
 .tab.active {
-  background-color: #408EC6;
+  background-color: #faae2b;
 }
 
 .configurator-top-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+}
+
+.apply-existing-profile {
+  padding: 10px;
+  border: 1px solid #00473e;
+  margin-bottom: 10px;
+}
+
+.apply-existing-profile label {
+  margin-bottom: 5px;
+  display: block;
+}
+
+.apply-existing-profile select {
+  display: block;
+  width: 100%;
+}
+
+.save-btn {
+  all: unset;
+  padding: 10px;
+  background-color: #408EC6;
+  color: #fffffe;
+  font-weight: bold;
+  cursor: pointer;
+  width: 75px;
+  text-align: center;
+}
+
+.profile-name {
+  color: #00473e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .configurator {
+    color: #a7a9be;
+    background-color: #0f0e17;
+  }
+
+  .profile-name {
+    color: #fffffe;
+  }
+
+  .tab {
+    color: #fffffe;
+    border: 1px solid #fffffe;
+  }
+
+  .tab.active {
+    background-color: #ff8906;
+    font-weight: bold;
+  }
+
+  .save-btn {
+    all: unset;
+    padding: 10px;
+    background-color: #f25f4c;
+    color: #fffffe;
+    font-weight: bold;
+    cursor: pointer;
+    width: 75px;
+    text-align: center;
+  }
+  .apply-existing-profile {
+    border: 1px solid #fffffe;
+    color: #fffffe;
+  }
 }
 </style>

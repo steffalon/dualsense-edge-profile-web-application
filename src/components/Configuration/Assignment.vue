@@ -142,7 +142,6 @@ const scanSelected = (e: Event) => {
 }
 
 .circle-button {
-  background-color: black;
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -151,7 +150,6 @@ const scanSelected = (e: Event) => {
 }
 
 .circle-joystick {
-  background-color: black;
   width: 47px;
   height: 47px;
   border-radius: 50%;
@@ -163,21 +161,26 @@ const scanSelected = (e: Event) => {
   position: absolute;
   width: 115px;
   padding: 10px 20px;
-  border-radius: 5px;
+  color: #00473e;
   box-shadow: 3px 5px 12px 2px rgba(0, 0, 0, 0.15);
   background-color: #FFFFFF;
   display: none;
 }
 
 .select-popup-close {
-  text-align: right;
+  all: unset;
+  font-size: 1.4em;
+  padding: 2px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 20px;
+  text-align: center;
   position: absolute;
   right: 0;
   top: 0;
 }
 
 .dpad-button {
-  background-color: black;
   width: 28px;
   height: 21px;
   display: block;
@@ -187,7 +190,6 @@ const scanSelected = (e: Event) => {
 }
 
 .left_1 {
-  background-color: black;
   width: 52px;
   height: 26px;
   display: block;
@@ -197,7 +199,6 @@ const scanSelected = (e: Event) => {
 }
 
 .right_1 {
-  background-color: black;
   width: 52px;
   height: 26px;
   display: block;
@@ -207,7 +208,6 @@ const scanSelected = (e: Event) => {
 }
 
 .left_2 {
-  background-color: black;
   width: 52px;
   height: 46px;
   display: block;
@@ -217,7 +217,6 @@ const scanSelected = (e: Event) => {
 }
 
 .right_2 {
-  background-color: black;
   width: 52px;
   height: 46px;
   display: block;
@@ -227,7 +226,6 @@ const scanSelected = (e: Event) => {
 }
 
 .create_button {
-  background-color: black;
   width: 12px;
   height: 22px;
   display: block;
@@ -237,7 +235,6 @@ const scanSelected = (e: Event) => {
 }
 
 .options_button {
-  background-color: black;
   width: 12px;
   height: 22px;
   display: block;
@@ -247,7 +244,6 @@ const scanSelected = (e: Event) => {
 }
 
 .trackpad {
-  background-color: rgba(0, 0, 0, .7);
   width: 150px;
   height: 72px;
   position: absolute;
@@ -256,7 +252,6 @@ const scanSelected = (e: Event) => {
 }
 
 .paddle_left {
-  background-color: black;
   width: 17px;
   height: 42px;
   display: block;
@@ -266,7 +261,6 @@ const scanSelected = (e: Event) => {
 }
 
 .paddle_right {
-  background-color: black;
   width: 17px;
   height: 42px;
   display: block;
@@ -275,11 +269,30 @@ const scanSelected = (e: Event) => {
   rotate: 10deg;
 }
 
+.interactable {
+  background-color: #faae2b;
+  cursor: pointer;
+}
+
 .interactable:hover {
-  background-color: yellow;
+  background-color: #fa5246;
 }
 
 .button-identifier-original {
   font-weight: bold;
+}
+
+@media (prefers-color-scheme: dark) {
+  .interactable:hover {
+    background-color: #f25f4c;
+  }
+  .interactable {
+    background-color: #ff8906;
+  }
+  .select-popup {
+    background-color: #f25f4c;
+    border: 1px solid #ffffff;
+    color: #fffffe;
+  }
 }
 </style>
