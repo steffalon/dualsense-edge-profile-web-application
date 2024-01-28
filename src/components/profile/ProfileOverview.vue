@@ -4,7 +4,8 @@ import Profile from "./Profile.vue";
 import ProfileModel from "../../model/Profile";
 import LocalIndexDB from "../../model/LocalIndexDB";
 import {assembleBlankProfile, getProfileButtonSelector} from "../../helper/profileTools";
-import {inject, Ref, ref} from "vue";
+import {inject, ref} from "vue";
+import type {Ref} from "vue";
 import Joystick from "../../model/Joystick";
 import Trigger from "../../model/Trigger";
 import ButtonMapping from "../../model/ButtonMapping";
@@ -19,6 +20,8 @@ const savedProfiles: Ref<Array<ProfileModel>> = ref([]);
 const emit = defineEmits(['selected-profile', 'delete-profile']);
 
 const db: LocalIndexDB = inject('db') as LocalIndexDB;
+const hidController = inject('HIDController') as Ref<HIDDevice>;
+const getProfiles = inject('getProfiles') as Function;
 
 db.getAll().then((profiles: Array<ProfileModel>) => savedProfiles.value = profiles.map((profileEntry: any) => {
 
@@ -47,6 +50,17 @@ const deleteProfileConfirm = (profile: ProfileModel) => {
   }
 }
 
+const clearProfileFromControllerMemory = async (profile: ProfileModel, position: number) => {
+
+  if (confirm(`Are you sure you want to clear ${profile.getLabel()} from the controller memory?`) &&
+      hidController.value) {
+    const bytes = new Uint8Array(64);
+    bytes[1] = 1 + position;
+    await hidController.value?.sendFeatureReport(0x68, bytes.slice(1, bytes.length));
+    getProfiles();
+  }
+}
+
 const createNewProfile = () => {
   let name = prompt("New profile name");
   if (name) {
@@ -64,9 +78,17 @@ const createNewProfile = () => {
     <section>
       <section class="profiles" v-if="profiles">
         <Profile @selected-profile="(selectedProfile) => $emit('selected-profile', selectedProfile)"
-                 v-for="profile in profiles"
+                 v-for="(profile, i) in profiles"
                  :profile="profile">
-          <p>{{ getProfileButtonSelector(profile.getProfileButtonSelector()) }}</p>
+          <div class="profile-right">
+            <span class="button-combination">
+              <span class="fn-button">FN</span>
+              <img class="action-button" :src="getProfileButtonSelector((profile as ProfileModel).getProfileButtonSelector())" alt="button">
+            </span>
+            <button class="clear-button" @click="$event.stopPropagation(); clearProfileFromControllerMemory(profile, i)">
+              Clear
+            </button>
+          </div>
         </Profile>
       </section>
       <section class="profiles saved">
@@ -113,10 +135,45 @@ const createNewProfile = () => {
   font-weight: bold;
 }
 
+.button-combination {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.fn-button {
+  width: 30px;
+  text-align: center;
+  height: 20px;
+  background-color: #0f0f10;
+  color: #a4aaad;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.action-button {
+  width: 24px;
+  height: 24px;
+}
+
+.clear-button {
+  all: unset;
+  cursor: pointer;
+  font-weight: bold;
+  border: 1px solid #ffffff;
+  margin-bottom: 10px;
+  padding: 5px 12px;
+}
+
+.clear-button:hover {
+  background-color: #0f0f10;
+}
+
 @media (prefers-color-scheme: dark) {
   .overview {
     background-color: #f25f4c;
   }
+
   .create-new-profile button {
     background-color: #ff8906;
     font-weight: bold;

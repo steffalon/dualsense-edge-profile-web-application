@@ -14,8 +14,10 @@ defineEmits([
 </script>
 <template>
   <section class="item" @click="$emit('selected-profile', profile)">
-    <p>{{ profile.getLabel() }}</p>
-    <slot/>
+    <p class="label">{{ profile.getLabel() }}</p>
+    <div>
+      <slot/>
+    </div>
   </section>
 </template>
 
@@ -25,6 +27,7 @@ defineEmits([
   justify-content: space-between;
   padding: 0 12px;
   cursor: pointer;
+  align-items: center;
 }
 
 .item:hover {
@@ -33,6 +36,10 @@ defineEmits([
 
 p {
   padding: 0;
+}
+
+.label {
+  font-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -11,6 +11,7 @@ const db = new LocalIndexDB('ds-edge-profiles');
 provide('db', db);
 
 let edgeHIDController: Ref<HIDDevice | undefined> = ref();
+provide('HIDController', edgeHIDController);
 
 let profiles = ref();
 let selectedProfile = ref();
@@ -34,13 +35,14 @@ const getProfiles = async () => {
       cIndex++;
     }
     let foundProfiles: Array<Profile> = [];
-    // console.log(profileCollector[2][2].slice(60), arrayCRC32LeBLE(new Uint8Array([0xA3, ...profileCollector[2][2].slice(0, 60)])));
     profileCollector.forEach((profile: number[][]) => {
       foundProfiles.push(bytesArrayToProfile(profile));
     });
     profiles.value = foundProfiles;
   }
 }
+// Used for refreshing profiles called by child component(s)
+provide('getProfiles', getProfiles);
 
 const getDevice = () => {
   navigator.hid.requestDevice({filters: [FILTERS]}).then(devices => {
@@ -89,7 +91,6 @@ const setSelectedProfile = (setSelectedProfile: Profile, isSavedProfile: boolean
 }
 
 const saveProfile = (newProfile: Profile) => {
-  console.log(edgeHIDController.value);
   if (edgeHIDController.value) {
     let bytesArray = profileToBytes(newProfile);
 

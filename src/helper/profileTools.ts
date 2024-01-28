@@ -32,15 +32,13 @@ export function assembleBlankProfile(label: string = "Unnamed"): Profile {
 export function getProfileButtonSelector(profileButtonSelector: ProfileButtonSelector): string {
     switch (profileButtonSelector) {
         case ProfileButtonSelector.FN_CIRCLE:
-            return "FN + CIRCLE";
+            return new URL('../assets/buttons/circle.svg', import.meta.url).href
         case ProfileButtonSelector.FN_CROSS:
-            return "FN + CROSS";
+            return new URL('../assets/buttons/cross.svg', import.meta.url).href
         case ProfileButtonSelector.FN_SQUARE:
-            return "FN + SQUARE";
+            return new URL('../assets/buttons/square.svg', import.meta.url).href
         case ProfileButtonSelector.FN_TRIANGLE:
-            return "FN + TRIANGLE";
-        case ProfileButtonSelector.UNASSIGNED:
-            return "UNASSIGNED";
+            return new URL('../assets/buttons/triangle.svg', import.meta.url).href
         default:
             return "UNKNOWN";
     }
