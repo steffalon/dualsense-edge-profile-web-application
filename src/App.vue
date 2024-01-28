@@ -111,7 +111,7 @@ const saveProfile = (newProfile: Profile) => {
 <template>
   <section v-if="!edgeHIDController" class="connect-controller-container">
     <section class="connect-controller-content">
-      <h3 class="connect-controller-header">DualSense Edge controller not found!</h3>
+      <h3 class="connect-controller-header">DualSense Edge controller not detected!</h3>
       <p class="connect-controller-text">Please (re)connect your controller.</p>
       <button class="connect-controller-button" @click="getDevice">Connect controller</button>
     </section>
