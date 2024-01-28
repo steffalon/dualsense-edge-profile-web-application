@@ -166,7 +166,7 @@ const createNewProfile = () => {
 }
 
 .clear-button:hover {
-  background-color: #0f0f10;
+  background-color: #fffffe;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -182,6 +182,10 @@ const createNewProfile = () => {
 
   .saved {
     border-top: 1px solid #fffffe;
+  }
+
+  .clear-button:hover {
+    background-color: #0f0f10;
   }
 }
 </style>
