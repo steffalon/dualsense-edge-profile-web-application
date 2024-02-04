@@ -25,8 +25,8 @@ const getProfiles = inject('getProfiles') as Function;
 
 db.getAll().then((profiles: Array<ProfileModel>) => savedProfiles.value = profiles.map((profileEntry: any) => {
 
-  const joystickLeft = new Joystick(PS5_JOYSTICK_CURVE[profileEntry.leftJoystick.profileId].getProfileId(), profileEntry.leftJoystick.adjustments);
-  const joystickRight = new Joystick(PS5_JOYSTICK_CURVE[profileEntry.rightJoystick.profileId].getProfileId(), profileEntry.rightJoystick.adjustments);
+  const joystickLeft = new Joystick(PS5_JOYSTICK_CURVE[profileEntry.leftJoystick.profileId].getProfileId(), profileEntry.leftJoystick.adjustments, PS5_JOYSTICK_CURVE[profileEntry.leftJoystick.profileId].getModifier());
+  const joystickRight = new Joystick(PS5_JOYSTICK_CURVE[profileEntry.rightJoystick.profileId].getProfileId(), profileEntry.rightJoystick.adjustments, PS5_JOYSTICK_CURVE[profileEntry.rightJoystick.profileId].getModifier());
 
   joystickLeft.setCurveValues(profileEntry.leftJoystick.curveValues);
   joystickRight.setCurveValues(profileEntry.rightJoystick.curveValues);

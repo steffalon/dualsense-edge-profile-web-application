@@ -11,10 +11,10 @@ export function generateId(): string {
 
 export function assembleBlankProfile(label: string = "Unnamed"): Profile {
 
-    const joystick_l = new Joystick(PS5_JOYSTICK_CURVE[0x00].getProfileId(), PS5_JOYSTICK_CURVE[0x00].getAdjustments());
+    const joystick_l = new Joystick(PS5_JOYSTICK_CURVE[0x00].getProfileId(), PS5_JOYSTICK_CURVE[0x00].getAdjustments(), PS5_JOYSTICK_CURVE[0x00].getModifier());
     joystick_l.setCurveValues([0, 0, 0, 0, 0, 0]);
 
-    const joystick_r = new Joystick(PS5_JOYSTICK_CURVE[0x00].getProfileId(), PS5_JOYSTICK_CURVE[0x00].getAdjustments());
+    const joystick_r = new Joystick(PS5_JOYSTICK_CURVE[0x00].getProfileId(), PS5_JOYSTICK_CURVE[0x00].getAdjustments(), PS5_JOYSTICK_CURVE[0x00].getModifier());
     joystick_r.setCurveValues([0, 0, 0, 0, 0, 0]);
 
     return new Profile(
