@@ -41,26 +41,30 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
 <template>
   <section>
     <h3>Left stick</h3>
-    <select @change="(e: any) => {
-      leftJoystick.setProfileId(e.target.value);
-      leftJoystickRange.disabled = Number(leftJoystick.getProfileId()) === JoystickProfileId.DEFAULT
-    }">
-      <option :selected="leftJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
+    <select
+        v-bind:value="leftJoystick.getProfileId()"
+        @change="(e: any) => {
+          leftJoystick.setProfileId(e.target.value);
+          leftJoystick.setModifier(PS5_JOYSTICK_CURVE[e.target.value].getModifier());
+          leftJoystickRange.disabled = Number(leftJoystick.getProfileId()) === JoystickProfileId.DEFAULT
+      }"
+    >
+      <option :value="JoystickProfileId.DEFAULT">
         Default
       </option>
-      <option :selected="leftJoystick.getProfileId() === JoystickProfileId.QUICK" :value="JoystickProfileId.QUICK">
+      <option :value="JoystickProfileId.QUICK">
         Quick
       </option>
-      <option :selected="leftJoystick.getProfileId() === JoystickProfileId.PRECISE" :value="JoystickProfileId.PRECISE">
+      <option :value="JoystickProfileId.PRECISE">
         Precise
       </option>
-      <option :selected="leftJoystick.getProfileId() === JoystickProfileId.STEADY" :value="JoystickProfileId.STEADY">
+      <option :value="JoystickProfileId.STEADY">
         Steady
       </option>
-      <option :selected="leftJoystick.getProfileId() === JoystickProfileId.DIGITAL" :value="JoystickProfileId.DIGITAL">
+      <option :value="JoystickProfileId.DIGITAL">
         Digital
       </option>
-      <option :selected="leftJoystick.getProfileId() === JoystickProfileId.DYNAMIC" :value="JoystickProfileId.DYNAMIC">
+      <option :value="JoystickProfileId.DYNAMIC">
         Dynamic
       </option>
     </select>
@@ -75,26 +79,30 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
   </section>
   <section>
     <h3>Right stick</h3>
-    <select @change="(e: any) => {
-      rightJoystick.setProfileId(e.target?.value);
-      rightJoystickRange.disabled = Number(rightJoystick.getProfileId()) === JoystickProfileId.DEFAULT
-    }">
-      <option :selected="rightJoystick.getProfileId() === JoystickProfileId.DEFAULT" :value="JoystickProfileId.DEFAULT">
+    <select
+        v-bind:value="rightJoystick.getProfileId()"
+        @change="(e: any) => {
+          rightJoystick.setProfileId(e.target.value);
+          rightJoystick.setModifier(PS5_JOYSTICK_CURVE[e.target.value].getModifier());
+          rightJoystickRange.disabled = Number(rightJoystick.getProfileId()) === JoystickProfileId.DEFAULT
+      }"
+    >
+      <option :value="JoystickProfileId.DEFAULT">
         Default
       </option>
-      <option :selected="rightJoystick.getProfileId() === JoystickProfileId.QUICK" :value="JoystickProfileId.QUICK">
+      <option :value="JoystickProfileId.QUICK">
         Quick
       </option>
-      <option :selected="rightJoystick.getProfileId() === JoystickProfileId.PRECISE" :value="JoystickProfileId.PRECISE">
+      <option :value="JoystickProfileId.PRECISE">
         Precise
       </option>
-      <option :selected="rightJoystick.getProfileId() === JoystickProfileId.STEADY" :value="JoystickProfileId.STEADY">
+      <option :value="JoystickProfileId.STEADY">
         Steady
       </option>
-      <option :selected="rightJoystick.getProfileId() === JoystickProfileId.DIGITAL" :value="JoystickProfileId.DIGITAL">
+      <option :value="JoystickProfileId.DIGITAL">
         Digital
       </option>
-      <option :selected="rightJoystick.getProfileId() === JoystickProfileId.DYNAMIC" :value="JoystickProfileId.DYNAMIC">
+      <option :value="JoystickProfileId.DYNAMIC">
         Dynamic
       </option>
     </select>
