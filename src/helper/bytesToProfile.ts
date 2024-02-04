@@ -15,7 +15,7 @@ export const PS5_JOYSTICK_CURVE = [
         new JoystickCurve(196),
         new JoystickCurve(225),
         new JoystickCurve(225)
-    ]),
+    ], 0x03),
     new Joystick(JoystickProfileId.QUICK, [
         new JoystickCurve(38),
         new JoystickCurve(38),
@@ -23,7 +23,7 @@ export const PS5_JOYSTICK_CURVE = [
         new JoystickCurve(139, [6, 5]),
         new JoystickCurve(255),
         new JoystickCurve(255)
-    ]),
+    ], 0x03),
     new Joystick(JoystickProfileId.PRECISE, [
         new JoystickCurve(70, 3),
         new JoystickCurve(57, [-3, -4]),
@@ -31,7 +31,7 @@ export const PS5_JOYSTICK_CURVE = [
         new JoystickCurve(115, [-6, -7]),
         new JoystickCurve(196, 2),
         new JoystickCurve(177, [-7, -8])
-    ]),
+    ], 0x04),
     new Joystick(JoystickProfileId.STEADY, [
         new JoystickCurve(62, -1),
         new JoystickCurve(62, -1),
@@ -39,7 +39,7 @@ export const PS5_JOYSTICK_CURVE = [
         new JoystickCurve(129, [0, -1]),
         new JoystickCurve(197, [3, 2]),
         new JoystickCurve(179, [-5, -6])
-    ]),
+    ], 0x04),
     new Joystick(JoystickProfileId.DIGITAL, [
         new JoystickCurve(38),
         new JoystickCurve(38),
@@ -47,7 +47,7 @@ export const PS5_JOYSTICK_CURVE = [
         new JoystickCurve(75, 18),
         new JoystickCurve(255),
         new JoystickCurve(255)
-    ]),
+    ], 0x03),
     new Joystick(JoystickProfileId.DYNAMIC, [
         new JoystickCurve(69, [3, 2]),
         new JoystickCurve(57, [-3, -4]),
@@ -55,7 +55,7 @@ export const PS5_JOYSTICK_CURVE = [
         new JoystickCurve(198, 3),
         new JoystickCurve(255),
         new JoystickCurve(255)
-    ]),
+    ], 0x03),
 ];
 
 export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
@@ -89,6 +89,8 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
             }
         }
 
+        console.log(label, bytesArray);
+
         leftJoystickCurrentCurveValues = bytesArray[1].slice(47, 53);
 
         rightJoystickCurrentCurveValues = bytesArray[1].slice(56, 60);
@@ -111,8 +113,8 @@ export function bytesArrayToProfile(bytesArray: Array<Array<number>>): Profile {
     const profile = new Profile(
         id,
         label,
-        new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][30]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][30]].getAdjustments()),
-        new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][32]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][32]].getAdjustments()),
+        new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][30]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][30]].getAdjustments(), PS5_JOYSTICK_CURVE[bytesArray[2][30]].getModifier()),
+        new Joystick(PS5_JOYSTICK_CURVE[bytesArray[2][32]].getProfileId(), PS5_JOYSTICK_CURVE[bytesArray[2][32]].getAdjustments(), PS5_JOYSTICK_CURVE[bytesArray[2][32]].getModifier()),
         new Trigger(bytesArray[2][4], bytesArray[2][5]),
         new Trigger(bytesArray[2][6], bytesArray[2][7]),
         new ButtonMapping(bytesArray[2].slice(10, 26)),
@@ -160,6 +162,12 @@ export function profileToBytes(profile: Profile): Array<Uint8Array> {
 
     buffers[2][30] = profile.getLeftJoyStick().getProfileId();
     buffers[2][32] = profile.getRightJoyStick().getProfileId();
+
+    buffers[1][44] = profile.getLeftJoyStick().getModifier();
+    buffers[1][53] = profile.getRightJoyStick().getModifier();
+
+    console.log(profile.getLeftJoyStick().getModifier())
+    console.log(profile.getRightJoyStick().getModifier())
 
     // Deep copy using JSON
     let joyConL = JSON.parse(JSON.stringify(profile.getLeftJoyStick().getCurveValues()));
