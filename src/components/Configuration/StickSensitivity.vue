@@ -2,7 +2,7 @@
 import {JoystickProfileId} from "../../enum/JoystickProfileId";
 import Joystick from "../../model/Joystick";
 import {PS5_JOYSTICK_CURVE} from "../../helper/bytesToProfile";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref, inject, onUnmounted} from "vue";
 import type {Ref} from "vue";
 
 const props = defineProps({
@@ -20,6 +20,8 @@ const leftJoystickRange = ref();
 const leftStickCurveCanvas: Ref<HTMLCanvasElement | undefined> = ref();
 const rightStickCurveCanvas: Ref<HTMLCanvasElement | undefined> = ref();
 const rightJoystickRange = ref();
+
+const edgeHIDController: Ref<HIDDevice> = inject('HIDController')!;
 
 const getCurrentCurve = (joystick: Joystick): number => {
 
@@ -40,7 +42,7 @@ const changeJoyStickIndex = (joystick: Joystick, event: Event) => {
   joystick.setCurveValues(PS5_JOYSTICK_CURVE[joystick.getProfileId()].getAdjustments().map(curve => curve.getByIndex(event.target.value)));
 }
 
-const drawCurve = (ctx: CanvasRenderingContext2D, joystick: Joystick) => {
+const drawCurve = (ctx: CanvasRenderingContext2D, joystick: Joystick, testProgress: number) => {
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -77,26 +79,43 @@ const drawCurve = (ctx: CanvasRenderingContext2D, joystick: Joystick) => {
   }
   ctx.lineTo(ctx.canvas.width,0);
   ctx.stroke();
+  ctx.closePath();
+  ctx.beginPath();
+  // If darkmode
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    ctx.fillStyle = 'rgba(242,95,76,0.5)';
+  } else {
+    ctx.fillStyle = 'rgba(64,142,198,0.5)';
+  }
+  ctx.fillRect(0, 0, (testProgress * 2 / 255) * ctx.canvas.width, ctx.canvas.height);
+  ctx.stroke();
+  ctx.closePath();
+}
+
+const readInput = (e: HIDInputReportEvent) => {
+  const inputStream = new Uint8Array(e.data.buffer);
+  let maxInputLeft = Math.max(inputStream[0], inputStream[1]) - 128;
+  let maxInputRight = Math.max(inputStream[2], inputStream[3]) - 128;
+  drawCurve(leftStickCurveCanvas.value!.getContext('2d')!, props.leftJoystick, maxInputLeft);
+  drawCurve(rightStickCurveCanvas.value!.getContext('2d')!, props.rightJoystick, maxInputRight);
 }
 
 onMounted(() => {
-  drawCurve(leftStickCurveCanvas.value!.getContext('2d')!, props.leftJoystick);
-  drawCurve(rightStickCurveCanvas.value!.getContext('2d')!, props.rightJoystick);
-})
+  edgeHIDController.value.addEventListener('inputreport', readInput);
+});
 
-watch(() => props.leftJoystick, value => {
-  drawCurve(leftStickCurveCanvas.value!.getContext('2d')!, value);
-}, {deep: true});
-
-watch(() => props.rightJoystick, value => {
-  drawCurve(rightStickCurveCanvas.value!.getContext('2d')!, value);
-}, {deep: true});
+onUnmounted(() => {
+  edgeHIDController.value.removeEventListener('inputreport', readInput);
+});
 
 </script>
 <template>
   <section>
+    <span class="note">Note: Changing curve values will not be applied immediately. Save your changes first in order to test them.</span>
     <h3>Left stick</h3>
-    <canvas ref="leftStickCurveCanvas" class="curve"></canvas>
+    <div class="canvasContainer">
+      <canvas ref="leftStickCurveCanvas" class="curve"></canvas>
+    </div>
     <select
         v-bind:value="leftJoystick.getProfileId()"
         @change="(e: any) => {
@@ -135,7 +154,9 @@ watch(() => props.rightJoystick, value => {
   </section>
   <section>
     <h3>Right stick</h3>
-    <canvas ref="rightStickCurveCanvas" class="curve"></canvas>
+    <div class="canvasContainer">
+      <canvas ref="rightStickCurveCanvas" class="curve"></canvas>
+    </div>
     <select
         v-bind:value="rightJoystick.getProfileId()"
         @change="(e: any) => {
@@ -185,10 +206,20 @@ h3 {
     color: #fffffe;
   }
 }
-.curve {
+.note {
+  margin-top: 21px;
+  display: block;
+}
+.canvasContainer {
   width: 520px;
   height: 255px;
-  display: block;
+  resize: both;
+  overflow: hidden;
   border: 1px solid white;
+}
+.curve {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 </style>
