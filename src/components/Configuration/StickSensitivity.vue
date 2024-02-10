@@ -111,7 +111,13 @@ onUnmounted(() => {
 </script>
 <template>
   <section>
-    <span class="note">Note: Changing curve values will not be applied immediately. Save your changes first in order to test them.</span>
+    <span class="note">
+      Note: Changing curve values will not be applied immediately.
+      Save your changes first in order to test them.
+    </span>
+    <span class="note">
+      Before testing, make sure your controller is set to the right profile using FN + ACTION button.
+    </span>
     <h3>Left stick</h3>
     <div class="canvasContainer">
       <canvas ref="leftStickCurveCanvas" class="curve"></canvas>
