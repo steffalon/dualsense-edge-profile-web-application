@@ -78,7 +78,7 @@ const createNewProfile = () => {
     <section>
       <section class="profiles" v-if="profiles">
         <Profile @selected-profile="(selectedProfile) => $emit('selected-profile', selectedProfile)"
-                 v-for="(profile, i) in profiles"
+                 v-for="(profile, i) in profiles.slice(1)"
                  :profile="profile">
           <div class="profile-right">
             <span class="button-combination">
