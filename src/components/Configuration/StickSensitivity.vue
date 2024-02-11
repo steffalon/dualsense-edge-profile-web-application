@@ -127,6 +127,7 @@ onUnmounted(() => {
         @change="(e: any) => {
           leftJoystick.setProfileId(e.target.value);
           leftJoystick.setModifier(PS5_JOYSTICK_CURVE[e.target.value].getModifier());
+          leftJoystick.setCurveValues(PS5_JOYSTICK_CURVE[leftJoystick.getProfileId()].getAdjustments().map(curve => curve.getByIndex(5)));
           leftJoystickRange.disabled = Number(leftJoystick.getProfileId()) === JoystickProfileId.DEFAULT
       }"
     >
@@ -168,6 +169,7 @@ onUnmounted(() => {
         @change="(e: any) => {
           rightJoystick.setProfileId(e.target.value);
           rightJoystick.setModifier(PS5_JOYSTICK_CURVE[e.target.value].getModifier());
+          rightJoystick.setCurveValues(PS5_JOYSTICK_CURVE[rightJoystick.getProfileId()].getAdjustments().map(curve => curve.getByIndex(5)));
           rightJoystickRange.disabled = Number(rightJoystick.getProfileId()) === JoystickProfileId.DEFAULT
       }"
     >
